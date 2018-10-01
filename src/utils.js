@@ -1,6 +1,10 @@
 import * as request from 'request'
 import * as fs from 'fs';
+import * as decompress from 'decompress';
+import { platform } from './config'
+import { execSync } from 'child_process'
 const parseVersion = v => v.replace(/\w/, '').split('.').map(d => parseInt(d));
+// const decompress = require('decompress');
 
 export const compareVersions = (v1, v2) => {
     if (v1 === v2) return 0;
@@ -19,6 +23,18 @@ export const removeFolder = (path) => {
     return new Promise((resolve) => {
         require('rimraf')(path, resolve);
     })
+}
+
+export const unzip = (archive, dir) => {
+    if(platform() === 'mac'){
+        return new Promise(resolve => {
+            console.log('unzip ' + archive)
+            execSync(`unzip ${archive} -d ${dir}`);
+            resolve(null);
+        })
+    }else {
+        return decompress(archive, dir);
+    }
 }
 
 export const remakeDir = async (dir) => {

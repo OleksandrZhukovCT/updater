@@ -1,10 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { execFileSync } from 'child_process'
-import { appDir, archiveType, platform, exec } from '../config';
-import { compareVersions, downloadApp, remakeDir } from '../utils'
-
-const decompress = require('decompress');
+import { execFileSync, execSync } from 'child_process'
+import { appDir, archiveType, platform, execPath } from '../config';
+import { compareVersions, downloadApp, remakeDir, unzip } from '../utils'
 
 import { getReleases } from './github'
 
@@ -13,8 +11,14 @@ export let currentVersion = null;
 
 export const runApp = () => {
     let version = fs.readFileSync(path.join(appDir, 'version')).toLocaleString();
-    console.log("Running app:", version)
-    execFileSync(path.join(appDir, version, exec()))
+    console.log("Running the app:", version);
+    console.log(`open ${path.join(appDir, version, execPath())}`)
+    if(platform() === 'mac'){
+        
+        execSync(`open ${path.join(appDir, version, execPath())}`)
+    }else{
+        execFileSync(path.join(appDir, version, execPath()))
+    }
 }
 
 export const updateApp = async (mainWindow) => {
@@ -43,7 +47,7 @@ export const updateApp = async (mainWindow) => {
 
     downloadApp(url, archiveFile, p => mainWindow.webContents.send('download-progress', p))
         .then(() => {
-            decompress(archiveFile, versionDir).then(files => {
+            unzip(archiveFile, versionDir).then(files => {
                 console.log('done!', files);
                 mainWindow.close();
                 currentVersion = latestVersion.tag_name;
