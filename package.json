@@ -2,7 +2,7 @@
   "name": "updater",
   "version": "0.0.1",
   "author": "A <a@email.co>",
-  "description": "Desktop App Updater",
+  "description": "Desktop App",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -53,9 +53,12 @@
   "dependencies": {
     "@octokit/rest": "^15.12.1",
     "axios": "^0.18.0",
+    "decompress": "^4.2.0",
+    "extract-zip": "^1.6.7",
     "request": "^2.88.0",
     "request-progress": "^3.0.0",
     "requests": "^0.2.2",
+    "rimraf": "^2.6.2",
     "unzip": "^0.1.11",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6"

@@ -12,8 +12,6 @@ import {
 import {
   ipcMain
 } from 'electron';
-import axios from 'axios';
-const request = require('request');
 
 
 /**
@@ -22,18 +20,6 @@ const request = require('request');
  */
 
 let mainWindow
-  
-  //url = 'https://s.gravatar.com/avatar/433f03f0cf4ffafc35a8527538fd8a48?size=496&default=retro'
-  /* axios({
-    url,
-    method: 'GET',
-    responseType: 'blob',
-    onDownloadProgress: (p) => {
-      console.log('aaa'+p);
-      mainWindow.webContents.send('download-progress', p)
-    }
-  }).then(() => mainWindow.webContents.send('download-finish')); */
-//});
 
 const winURL = process.env.NODE_ENV === 'development' ?
   `http://localhost:9080` :
@@ -51,9 +37,9 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 500,
+    height: 200,
     useContentSize: true,
-    width: 800
+    width: 500
   })
 
   mainWindow.loadURL(winURL)
@@ -81,13 +67,17 @@ checkUpdate().then(needsUpdate => {
   } else {
     runApp()
   }
-}).catch(() => runApp())
+}).catch(e => {
+  console.error(e)
+  runApp()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
+
 /**
  * Auto Updater
  *
